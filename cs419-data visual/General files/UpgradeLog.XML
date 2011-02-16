@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="Sample">
+</Property><Property Name="Solution File" Value="C:\Users\unknown\Desktop\SampleFolder\Sample.sln">
+</Property><Property Name="Date" Value="Tuesday, January 11, 2011">
+</Property><Property Name="Time" Value="19:27:43 PM">
+</Property></Properties><Event ErrorLevel="0" Project="Sample" Source="Sample.vcproj" Description="Converting project file 'C:\Users\unknown\Desktop\SampleFolder\Sample.vcproj'.">
+</Event><Event ErrorLevel="1" Project="Sample" Source="Sample.vcproj" Description="VCWebServiceProxyGeneratorTool is no longer supported. The tool has been removed from your project settings.">
+</Event><Event ErrorLevel="1" Project="Sample" Source="Sample.vcproj" Description="MSB8012: $(TargetPath) ('C:\Users\unknown\Desktop\SampleFolder\.\Debug\Sample.exe') does not match the Linker's OutputFile property value '.\Debug/Sample.exe' ('C:\Users\unknown\Desktop\SampleFolder\Debug/Sample.exe') in project configuration 'Debug|Win32'. This may cause your project to build incorrectly. To correct this, please make sure that $(TargetPath) property value matches the value specified in %(Link.OutputFile).">
+</Event><Event ErrorLevel="1" Project="Sample" Source="Sample.vcproj" Description="MSB8012: $(TargetPath) ('C:\Users\unknown\Desktop\SampleFolder\.\Release\Sample.exe') does not match the Linker's OutputFile property value '.\Release/Sample.exe' ('C:\Users\unknown\Desktop\SampleFolder\Release/Sample.exe') in project configuration 'Release|Win32'. This may cause your project to build incorrectly. To correct this, please make sure that $(TargetPath) property value matches the value specified in %(Link.OutputFile).">
+</Event><Event ErrorLevel="0" Project="Sample" Source="Sample.vcproj" Description="Done converting to new project file 'C:\Users\unknown\Desktop\SampleFolder\Sample.vcxproj'.">
+</Event><Event ErrorLevel="3" Project="Sample" Source="Sample.vcproj" Description="Converted">
+</Event></UpgradeLog>
