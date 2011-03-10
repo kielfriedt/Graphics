@@ -39,24 +39,9 @@
 #include <ctype.h>
 
 
-
-//
-//	The objective is to draw a colored point cloud
-//		with radio buttons
-//
-//	The left mouse button allows rotation
-//	The middle mouse button allows scaling
-//	The glui window allows:
-//		1. The 3d object to be transformed
-//		2. The projection to be changed
-//		3. The color of the axes to be changed
-//		4. The axes to be turned on and off
-//		5. The transformations to be reset
-//		6. The program to quit
-//
-//	Author: Kiel Friedt
-//
-
+/*
+ Colored point cloud with Gradient, radius, temperature, x, y and z range sliders.
+ */
 
 
 inline float SQR( float x )

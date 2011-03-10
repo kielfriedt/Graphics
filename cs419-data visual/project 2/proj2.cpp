@@ -62,17 +62,6 @@
 //
 
 
-//
-// constants:
-//
-// NOTE: There are a bunch of good reasons to use const variables instead
-// of #define's.  However, Visual C++ does not allow a const variable
-// to be used as an array size or as the case in a switch() statement.  So in
-// the following, all constants are const variables except those which need to
-// be array sizes or cases in switch() statements.  Those are #defines.
-//
-//
-
 // title of these windows:
 
 const char *WINDOWTITLE = { "Project 2 -- KIEL FRIEDT" };

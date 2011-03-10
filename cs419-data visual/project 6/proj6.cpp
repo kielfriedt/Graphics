@@ -13,7 +13,7 @@
  *
  *    You should have received a copy of the GNU General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 #define _USE_MATH_DEFINES
 #include <math.h>
 
@@ -40,34 +40,10 @@
 
 
 
-//
-//	The objective is to draw a grayscale point cloud
-//		with radio buttons
-//
-//	The left mouse button allows rotation
-//	The middle mouse button allows scaling
-//	The glui window allows:
-//		1. The 3d object to be transformed
-//		2. The projection to be changed
-//		3. The color of the axes to be changed
-//		4. The axes to be turned on and off
-//		5. The transformations to be reset
-//		6. The program to quit
-//
-//	Author: Kiel Friedt
-//
+/*
+ * Vector cloud containing streamlines, probeing system with probe options.
+ */
 
-
-//
-// constants:
-//
-// NOTE: There are a bunch of good reasons to use const variables instead
-// of #define's.  However, Visual C++ does not allow a const variable
-// to be used as an array size or as the case in a switch() statement.  So in
-// the following, all constants are const variables except those which need to
-// be array sizes or cases in switch() statements.  Those are #defines.
-//
-//
 
 inline float SQR( float x )
 {
@@ -110,13 +86,11 @@ const float FSRMAX = { 1.00f };
 
 const float CRMIN = {-13.0f };
 const float CRMAX = { 13.0f };
- 
+
 //project3 variables
 char str[128];
 float hsv[3];
 float rgb[3];
-
-
 
 
 #define FSR		0
@@ -140,7 +114,6 @@ struct node
 };
 
 node ***nodeArray;
-
 
 
 // multiplication factors for input interaction:
@@ -322,10 +295,10 @@ void	SBB( int, int );
 //
 
 int
-	main( int argc, char *argv[] )
+main( int argc, char *argv[] )
 {
 	// Set up node structure
-
+	
 	// Allocate memory for the 3d node array
 	nodeArray = new node**[CUBEROOTOFNODES];
 	for (int i = 0; i < CUBEROOTOFNODES; i++) {
@@ -334,48 +307,48 @@ int
 			nodeArray[i][j] = new node[CUBEROOTOFNODES];
 		}
 	}
-
-
-
+	
+	
+	
 	// turn on the glut package:
 	// (do this before checking argc and argv since it might
 	// pull some command line arguments out)
-
+	
 	glutInit( &argc, argv );
-
-
+	
+	
 	// setup all the graphics stuff:
-
+	
 	InitGraphics();
-
-
+	
+	
 	// create the display structures that will not change:
-
+	
 	InitLists();
-
-
+	
+	
 	// init all the global variables used by Display():
 	// this will also post a redisplay
 	// it is important to call this before InitGlui()
 	// so that the variables that glui will control are correct
 	// when each glui widget is created
-
+	
 	Reset();
-
-
+	
+	
 	// setup all the user interface stuff:
-
+	
 	InitGlui();
-
-
+	
+	
 	// draw the scene once and wait for some interaction:
 	// (will never return)
-
+	
 	glutMainLoop();
-
-
+	
+	
 	// this is here to make the compiler happy:
-
+	
 	return 0;
 }
 
@@ -427,7 +400,7 @@ void RibbonTrace(float x, float y, float z)
 			}
 			if( x2 >= (XMAX)) {
 				x2 = XMAX;
-			out = true;
+				out = true;
 			}
 			if( y2 <= (YMIN)) {
 				y2 = YMIN;
@@ -435,7 +408,7 @@ void RibbonTrace(float x, float y, float z)
 			}
 			if( y2 >= (YMAX)) {
 				y2 = YMAX;
-			out = true;
+				out = true;
 			};
 			if( z2 <= (ZMIN)) {
 				z2 = ZMIN;
@@ -443,7 +416,7 @@ void RibbonTrace(float x, float y, float z)
 			}
 			if( z2 >= (ZMAX)){
 				z2 = ZMAX;
-			out = true;
+				out = true;
 			}
 			glVertex3f(x, y, z);
 			glVertex3f(x2, y2, z2);
@@ -454,7 +427,7 @@ void RibbonTrace(float x, float y, float z)
 			if( abs(vx2) < 0.01 && abs(vy2) < 0.01 && abs(vz2) < 0.01) break;
 			Advect(&x, &y, &z);
 			Advect(&x2, &y2, &z2);
-		if( x <= (XMIN)){
+			if( x <= (XMIN)){
 				x = XMIN;
 				out=true;
 			}
@@ -484,7 +457,7 @@ void RibbonTrace(float x, float y, float z)
 			}
 			if( x2 >= (XMAX)) {
 				x2 = XMAX;
-			out = true;
+				out = true;
 			}
 			if( y2 <= (YMIN)) {
 				y2 = YMIN;
@@ -492,7 +465,7 @@ void RibbonTrace(float x, float y, float z)
 			}
 			if( y2 >= (YMAX)) {
 				y2 = YMAX;
-			out = true;
+				out = true;
 			};
 			if( z2 <= (ZMIN)) {
 				z2 = ZMIN;
@@ -500,19 +473,19 @@ void RibbonTrace(float x, float y, float z)
 			}
 			if( z2 >= (ZMAX)){
 				z2 = ZMAX;
-			out = true;
+				out = true;
 			}
 			glVertex3f(x2, y2, z2);
 			glVertex3f(x, y, z);
-
+			
 			
 			if(out==true)
 				break;
-
+			
 		}
-			x = origx+(+0.05 * j); y = origy; z = origz;
+		x = origx+(+0.05 * j); y = origy; z = origz;
 	}
-
+	
 	glEnd();
 }
 
@@ -534,15 +507,15 @@ void Vector( float x, float y, float z,   float *vxp, float *vyp, float *vzp )
 //
 
 void
-	Animate( void )
+Animate( void )
 {
 	// put animation stuff in here -- change some global variables
 	// for Display() to find:
-
-
-
+	
+	
+	
 	// force a call to Display() next time it is convenient:
-
+	
 	glutSetWindow( MainWindow );
 	glutPostRedisplay();
 }
@@ -555,55 +528,58 @@ void
 //
 
 void
-	Buttons( int id )
+Buttons( int id )
 {
 	switch( id )
 	{
-	case RESET:
-		Reset();	
-		sprintf( str, FSRFORMAT, FSRLowHigh[0], FSRLowHigh[1] );
-		FSRLabel->set_text( str );
-		sprintf( str, CRFORMAT, CRLowHigh[0], CRLowHigh[1] );
-		CRLabel->set_text( str );
-		Glui->sync_live();
-		glutSetWindow( MainWindow );
-		glutPostRedisplay();
-		break;
-
-	case QUIT:
-		// gracefully close the glui window:
-		// gracefully close out the graphics:
-		// gracefully close the graphics window:
-		// gracefully exit the program:
-
-		Glui->close();
-		glutSetWindow( MainWindow );
-		glFinish();
-		glutDestroyWindow( MainWindow );
-		exit( 0 );
-		break;
-
-	default:
-		fprintf( stderr, "Don't know what to do with Button ID %d\n", id );
+		case RESET:
+			Reset();	
+			sprintf( str, FSRFORMAT, FSRLowHigh[0], FSRLowHigh[1] );
+			FSRLabel->set_text( str );
+			sprintf( str, CRFORMAT, CRLowHigh[0], CRLowHigh[1] );
+			CRLabel->set_text( str );
+			Glui->sync_live();
+			glutSetWindow( MainWindow );
+			glutPostRedisplay();
+			break;
+			
+		case QUIT:
+			// gracefully close the glui window:
+			// gracefully close out the graphics:
+			// gracefully close the graphics window:
+			// gracefully exit the program:
+			
+			Glui->close();
+			glutSetWindow( MainWindow );
+			glFinish();
+			glutDestroyWindow( MainWindow );
+			exit( 0 );
+			break;
+			
+		default:
+			fprintf( stderr, "Don't know what to do with Button ID %d\n", id );
 	}
-
+	
 }
 
+/*
+ * Sliders Callback
+ */
 void
-	Sliders( int id )
+Sliders( int id )
 {
 	switch( id )
 	{	
-	case FSR:
-		sprintf( str, FSRFORMAT, FSRLowHigh[0], FSRLowHigh[1] );
-		FSRLabel->set_text( str );
-		break;
-	case CR:
-		sprintf( str, CRFORMAT, CRLowHigh[0], CRLowHigh[1] );
-		CRLabel->set_text( str );
-		break;
+		case FSR:
+			sprintf( str, FSRFORMAT, FSRLowHigh[0], FSRLowHigh[1] );
+			FSRLabel->set_text( str );
+			break;
+		case CR:
+			sprintf( str, CRFORMAT, CRLowHigh[0], CRLowHigh[1] );
+			CRLabel->set_text( str );
+			break;
 	}
-
+	
 	glutSetWindow( MainWindow );
 	glutPostRedisplay( );
 }
@@ -611,101 +587,100 @@ void
 //
 // draw the complete scene:
 //
-
 void
-	Display( void )
+Display( void )
 {
 	GLsizei vx, vy, v;		// viewport dimensions
 	GLint xl, yb;		// lower-left corner of viewport
 	GLfloat scale2;		// real glui scale factor
-
+	
 	if( DebugOn != 0 )
 	{
 		fprintf( stderr, "Display\n" );
 	}
-
-
+	
+	
 	// set which window we want to do the graphics into:
-
+	
 	glutSetWindow( MainWindow );
-
-
+	
+	
 	// erase the background:
-
+	
 	glDrawBuffer( GL_BACK );
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	glEnable( GL_DEPTH_TEST );
-
-
+	
+	
 	// specify shading to be flat:
-
+	
 	glShadeModel( GL_FLAT );
-
-
+	
+	
 	// set the viewport to a square centered in the window:
-
+	
 	vx = glutGet( GLUT_WINDOW_WIDTH );
 	vy = glutGet( GLUT_WINDOW_HEIGHT );
 	v = vx < vy ? vx : vy;			// minimum dimension
 	xl = ( vx - v ) / 2;
 	yb = ( vy - v ) / 2;
 	glViewport( xl, yb,  v, v );
-
-
+	
+	
 	// set the viewing volume:
 	// remember that the Z clipping  values are actually
 	// given as DISTANCES IN FRONT OF THE EYE
 	// USE gluOrtho2D() IF YOU ARE DOING 2D !
-
+	
 	glMatrixMode( GL_PROJECTION );
 	glLoadIdentity();
 	if( WhichProjection == ORTHO )
 		glOrtho( -3., 3.,     -3., 3.,     0.1, 1000. );
 	else
 		gluPerspective( 90., 1.,	0.1, 1000. );
-
-
+	
+	
 	// place the objects into the scene:
-
+	
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity();
-
-
+	
+	
 	// set the eye position, look-at position, and up-vector:
 	// IF DOING 2D, REMOVE THIS -- OTHERWISE ALL YOUR 2D WILL DISAPPEAR !
-
+	
 	gluLookAt( 0., 0., 3.,     0., 0., 0.,     0., 1., 0. );
-
-
+	
+	
 	// translate the objects in the scene:
 	// note the minus sign on the z value
 	// this is to make the appearance of the glui z translate
 	// widget more intuitively match the translate behavior
 	// DO NOT TRANSLATE IN Z IF YOU ARE DOING 2D !
-
+	
 	glTranslatef( (GLfloat)TransXYZ[0], (GLfloat)TransXYZ[1], -(GLfloat)TransXYZ[2] );
-
-
+	
+	
 	// rotate the scene:
 	// DO NOT ROTATE (EXCEPT ABOUT Z) IF YOU ARE DOING 2D !
-
+	
 	glRotatef( (GLfloat)Yrot, 0., 1., 0. );
 	glRotatef( (GLfloat)Xrot, 1., 0., 0. );
 	glMultMatrixf( (const GLfloat *) RotMatrix );
-
-
+	
+	
 	// uniformly scale the scene:
-
+	
 	glScalef( (GLfloat)Scale, (GLfloat)Scale, (GLfloat)Scale );
 	scale2 = 1. + Scale2;		// because glui translation starts at 0.
 	if( scale2 < MINSCALE )
 		scale2 = MINSCALE;
 	glScalef( (GLfloat)scale2, (GLfloat)scale2, (GLfloat)scale2 );
-
-
+	
+	
 	// set the fog parameters:
 	// DON'T NEED THIS IF DOING 2D !
-
+	
 	if( DepthCueOn != 0 )
 	{
 		glFogi( GL_FOG_MODE, FOGMODE );
@@ -719,126 +694,97 @@ void
 	{
 		glDisable( GL_FOG );
 	}
-
-
+	
+	
 	// possibly draw the axes:
-
+	
 	if( AxesOn != 0 )
 	{
 		glColor3fv( &Colors[WhichColor][0] );
 		glCallList( AxesList );
 	}
-
-
+	
+	
 	if( BoundingBox != 0 )
-	{
-		
 		glutWireCube(2.0);
-		
-	}
-
-
 	
-
+	
+	
+	
 	if(WhichProbe != 0){
-	
-		
-		
 		Probe.x = ProbeXY[0];
 		Probe.y = ProbeXY[1];
 		Probe.z = ProbeZ[0];
 		glColor3f(0,1,0);
-
-	
-
-	glBegin(GL_POLYGON);
+		
+		glBegin(GL_POLYGON);
 		glPolygonMode( GL_FRONT, GL_FILL);
-		//glVertex3f((Probe.x), (Probe.y ), (Probe.z));
 		glVertex3f((Probe.x + 0.1), (Probe.y), (Probe.z));
 		glVertex3f((Probe.x), (Probe.y), (Probe.z+ 0.1));
 		glVertex3f((Probe.x - 0.1), (Probe.y), (Probe.z));
 		glVertex3f((Probe.x), (Probe.y), (Probe.z - 0.1));
 		glEnd();
-
-	glColor3f(1,1,1);
-	if(Probe.x > -1.0|| Probe.y>-1.0|| Probe.z>-1.0||Probe.x<1.0|| Probe.y<1.0|| Probe.z<1.0 )
-		if(WhichProbe == 1)
-		{
-			CUBEROOTOFNODES = 30;
-			for(int j = -2; j <2; j++)
-			StreamLine(Probe.x+(j*.05), Probe.y, Probe.z);
-			for(int j = -2; j <2; j++)
-			StreamLine(Probe.x, Probe.y+(j*.05), Probe.z);
-			CUBEROOTOFNODES = 14;
-		}
-		else if(WhichProbe == 2)
-			RibbonTrace(Probe.x-.1, Probe.y, Probe.z);
+		
+		glColor3f(1,1,1);
+		if(Probe.x > -1.0|| Probe.y>-1.0|| Probe.z>-1.0||Probe.x<1.0|| Probe.y<1.0|| Probe.z<1.0 )
+			if(WhichProbe == 1)
+			{
+				CUBEROOTOFNODES = 30;
+				for(int j = -2; j <2; j++)
+					StreamLine(Probe.x+(j*.05), Probe.y, Probe.z);
+				for(int j = -2; j <2; j++)
+					StreamLine(Probe.x, Probe.y+(j*.05), Probe.z);
+				CUBEROOTOFNODES = 14;
+			}
+			else if(WhichProbe == 2)
+				RibbonTrace(Probe.x-.1, Probe.y, Probe.z);
 	}
-
-
-
-
+	
+	
 	// set the color of the object:
-
+	
 	glColor3fv( Colors[WhichColor] );
-
-
-
+	
+	
+	
 	// draw the current object:
 	if(VectorCloud != 0){
-	float  tail[3], head[3];
-	glPointSize( 2 );	// hardwire this, or set it with a spinner  //# of pixels
-	for(int i=0; i<CUBEROOTOFNODES; i++)
-		for(int j=0; j<CUBEROOTOFNODES; j++)
-			for(int k=0; k<CUBEROOTOFNODES; k++){
-
-				/*
-				if(nodeArray[i][j][k].x < FSRLowHigh[0] || nodeArray[i][j][k].x > FSRLowHigh[1])
-				continue;
-
-				else if(nodeArray[i][j][k].y < CRLowHigh[0] || nodeArray[i][j][k].y > CRLowHigh[1])
-				continue;
-
-				else if(nodeArray[i][j][k].z < VCSLowHigh[0] || nodeArray[i][j][k].z > VCSLowHigh[1])
-				continue;
-				*/
-
-
-				glColor3f( nodeArray[i][j][k].rgb[0], nodeArray[i][j][k].rgb[1], nodeArray[i][j][k].rgb[2]);
-
-				tail[0] = nodeArray[i][j][k].x -  VectorScaler*nodeArray[i][j][k].vx/2.;
-				tail[1] = nodeArray[i][j][k].y -  VectorScaler*nodeArray[i][j][k].vy/2.;
-				tail[2] = nodeArray[i][j][k].z -  VectorScaler*nodeArray[i][j][k].vz/2.;
-
-				head[0] = nodeArray[i][j][k].x +  VectorScaler*nodeArray[i][j][k].vx/2.;
-				head[1] = nodeArray[i][j][k].y +  VectorScaler*nodeArray[i][j][k].vy/2.;
-				head[2] = nodeArray[i][j][k].z +  VectorScaler*nodeArray[i][j][k].vz/2.;
-				Arrow( tail, head );
-		}
+		float  tail[3], head[3];
+		glPointSize( 2 );	// hardwire this, or set it with a spinner  //# of pixels
+		for(int i=0; i<CUBEROOTOFNODES; i++)
+			for(int j=0; j<CUBEROOTOFNODES; j++)
+				for(int k=0; k<CUBEROOTOFNODES; k++){
+					glColor3f( nodeArray[i][j][k].rgb[0], nodeArray[i][j][k].rgb[1], nodeArray[i][j][k].rgb[2]);
+					
+					tail[0] = nodeArray[i][j][k].x -  VectorScaler*nodeArray[i][j][k].vx/2.;
+					tail[1] = nodeArray[i][j][k].y -  VectorScaler*nodeArray[i][j][k].vy/2.;
+					tail[2] = nodeArray[i][j][k].z -  VectorScaler*nodeArray[i][j][k].vz/2.;
+					
+					head[0] = nodeArray[i][j][k].x +  VectorScaler*nodeArray[i][j][k].vx/2.;
+					head[1] = nodeArray[i][j][k].y +  VectorScaler*nodeArray[i][j][k].vy/2.;
+					head[2] = nodeArray[i][j][k].z +  VectorScaler*nodeArray[i][j][k].vz/2.;
+					Arrow( tail, head );
+				}
 	}
 	if( StreamLines != 0){
 		glColor3f(0,1.,1.);
 		for(int i=0; i<CUBEROOTOFNODES; i+=2){
-		for(int j=0; j<CUBEROOTOFNODES; j+=3){
-			for(int k=0; k<CUBEROOTOFNODES; k+=3){
-				StreamLine(nodeArray[i][j][k].x,nodeArray[i][j][k].y,nodeArray[i][j][k].z);
-			} 
-		}
+			for(int j=0; j<CUBEROOTOFNODES; j+=3){
+				for(int k=0; k<CUBEROOTOFNODES; k+=3){
+					StreamLine(nodeArray[i][j][k].x,nodeArray[i][j][k].y,nodeArray[i][j][k].z);
+				} 
+			}
 		}
 	}
-
-
-
-
-
+	
 	// swap the double-buffered framebuffers:
-
+	
 	glutSwapBuffers();
-
-
+	
+	
 	// be sure the graphics buffer has been sent:
 	// note: be sure to use glFlush() here, not glFinish() !
-
+	
 	glFlush();
 }
 
@@ -847,9 +793,8 @@ void
 //
 // use glut to display a string of characters using a raster font:
 //
-
 void
-	DoRasterString( float x, float y, float z, char *s )
+DoRasterString( float x, float y, float z, char *s )
 {
 	char c;			// one character to print
 	glRasterPos3f( (GLfloat)x, (GLfloat)y, (GLfloat)z );
@@ -864,13 +809,12 @@ void
 //
 // use glut to display a string of characters using a stroke font:
 //
-
 void
-	DoStrokeString( float x, float y, float z, float ht, char *s )
+DoStrokeString( float x, float y, float z, float ht, char *s )
 {
 	char c;			// one character to print
 	float sf;		// the scale factor
-
+	
 	glPushMatrix();
 	glTranslatef( (GLfloat)x, (GLfloat)y, (GLfloat)z );
 	sf = ht / ( 119.05 + 33.33 );
@@ -887,16 +831,15 @@ void
 //
 // return the number of seconds since the start of the program:
 //
-
 float
-	ElapsedSeconds( void )
+ElapsedSeconds( void )
 {
 	// get # of milliseconds since the start of the program:
-
+	
 	int ms = glutGet( GLUT_ELAPSED_TIME );
-
+	
 	// convert it to seconds:
-
+	
 	return (float)ms / 1000.;
 }
 
@@ -916,108 +859,107 @@ struct centers
 //
 // initialize the glui window:
 //
-
 void
-	InitGlui( void )
+InitGlui( void )
 {
 	GLUI_Panel *panel;
 	GLUI_RadioGroup *group;
 	GLUI_Rotation *rot;
 	GLUI_Translation *trans, *scale;
-
-
+	
+	
 	// setup the glui window:
-
+	
 	glutInitWindowPosition( INIT_WINDOW_SIZE + 50, 0 );
 	Glui = GLUI_Master.create_glui( (char *) GLUITITLE );
-
-
+	
+	
 	Glui->add_statictext( (char *) GLUITITLE );
 	Glui->add_separator();
-
+	
 	Glui->add_checkbox( "Axes", &AxesOn );
 	Glui->add_checkbox( "Bounding Box", &BoundingBox );
 	Glui->add_checkbox( "Perspective", &WhichProjection );
 	Glui->add_checkbox( "Intensity Depth Cue", &DepthCueOn );
 	Glui->add_checkbox( "Vector Cloud", &VectorCloud );
 	Glui->add_checkbox( "streamlines", &StreamLines );
-
+	
 	Glui->add_separator();
-
+	
 	panel = Glui->add_panel(  "Probe" );
 	group = Glui->add_radiogroup_to_panel( panel, &WhichProbe );
 	Glui->add_radiobutton_to_group( group, "Off" );
 	Glui->add_radiobutton_to_group( group, "Streamlines" );
 	Glui->add_radiobutton_to_group( group, "Ribbon trace" );
-
-
+	
+	
 	panel = Glui->add_panel( "Move The Probe" );
 	Glui->add_column_to_panel( panel, GLUIFALSE );
 	trans = Glui->add_translation_to_panel( panel, "Probe XY", GLUI_TRANSLATION_XY,  &ProbeXY[0]  );
 	trans->set_speed( 0.05f );
-
-
-
+	
+	
+	
 	Glui->add_column_to_panel( panel, GLUIFALSE );
 	trans = Glui->add_translation_to_panel( panel, "Probe YZ", GLUI_TRANSLATION_Z,  &ProbeZ[0]  );
 	trans->set_speed( 0.05f );
-
 	
- GLUI_Spinner *VCSpin = Glui->add_spinner( "Vector Cloud Scale: ", GLUI_SPINNER_FLOAT, &VectorScaler, 0.01 ,(GLUI_Update_CB) Sliders);
-
- VCSpin->set_float_limits(0.0, 1.0);
- VCSpin->set_float_val (.01);
+	
+	GLUI_Spinner *VCSpin = Glui->add_spinner( "Vector Cloud Scale: ", GLUI_SPINNER_FLOAT, &VectorScaler, 0.01 ,(GLUI_Update_CB) Sliders);
+	
+	VCSpin->set_float_limits(0.0, 1.0);
+	VCSpin->set_float_val (.01);
 	FSRSlider = Glui->add_slider( true, GLUI_HSLIDER_FLOAT, FSRLowHigh, FSR, (GLUI_Update_CB) Sliders );
 	FSRSlider->set_float_limits( FSRMIN, FSRMAX);
 	FSRSlider->set_w ( 200 );
 	sprintf( str, FSRFORMAT, FSRLowHigh[0], FSRLowHigh[1] );
 	FSRLabel  = Glui->add_statictext ( str );
-
-
+	
+	
 	CRSlider = Glui->add_slider( true, GLUI_HSLIDER_FLOAT, CRLowHigh, CR, (GLUI_Update_CB) Sliders );
 	CRSlider->set_float_limits( CRMIN, CRMAX);
 	CRSlider->set_w ( 200 );
 	sprintf( str, CRFORMAT, CRLowHigh[0], CRLowHigh[1] );
 	CRLabel  = Glui->add_statictext ( str );
-
+	
 	Glui->add_separator();
 	panel = Glui->add_panel( "Object Transformation" );
 	rot = Glui->add_rotation_to_panel( panel, "Rotation", (float *) RotMatrix );
-
+	
 	rot->set_spin( 1.0 );
-
+	
 	Glui->add_column_to_panel( panel, GLUIFALSE );
 	scale = Glui->add_translation_to_panel( panel, "Scale",  GLUI_TRANSLATION_Y , &Scale2 );
 	scale->set_speed( 0.005f );
-
+	
 	Glui->add_column_to_panel( panel, GLUIFALSE );
 	trans = Glui->add_translation_to_panel( panel, "Trans XY", GLUI_TRANSLATION_XY, &TransXYZ[0] );
 	trans->set_speed( 0.05f );
-
+	
 	Glui->add_column_to_panel( panel, GLUIFALSE );
 	trans = Glui->add_translation_to_panel( panel, "Trans Z",  GLUI_TRANSLATION_Z , &TransXYZ[2] );
 	trans->set_speed( 0.05f );
-
-
+	
+	
 	Glui->add_checkbox( "Debug", &DebugOn );
-
-
+	
+	
 	panel = Glui->add_panel( "", GLUIFALSE );
-
+	
 	Glui->add_button_to_panel( panel, "Reset", RESET, (GLUI_Update_CB) Buttons );
-
+	
 	Glui->add_column_to_panel( panel, GLUIFALSE );
-
+	
 	Glui->add_button_to_panel( panel, "Quit", QUIT, (GLUI_Update_CB) Buttons );
-
-
+	
+	
 	// tell glui what graphics window it needs to post a redisplay to:
-
+	
 	Glui->set_main_gfx_window( MainWindow );
-
-
+	
+	
 	// set the graphics window's idle function:
-
+	
 	GLUI_Master.set_glutIdleFunc( NULL );
 }
 
@@ -1025,9 +967,8 @@ void
 // initialize the glut and OpenGL libraries:
 //	also setup display lists and callback functions
 //
-
 void
-	InitGraphics( void )
+InitGraphics( void )
 {
 	float tempz = 1;
 	float  tail[3], head[3];
@@ -1041,62 +982,56 @@ void
 				nodeArray[i][j][k].z = tempz; 
 				tempx -= COORDRANGE / (CUBEROOTOFNODES);
 				Vector(nodeArray[i][j][k].x, nodeArray[i][j][k].y, nodeArray[i][j][k].z, &nodeArray[i][j][k].vx, &nodeArray[i][j][k].vy, &nodeArray[i][j][k].vz );
-
+				
 				tail[0] = nodeArray[i][j][k].x - VectorScaler*nodeArray[i][j][k].vx/2.;
 				tail[1] = nodeArray[i][j][k].y -  VectorScaler*nodeArray[i][j][k].vy/2.;
 				tail[2] = nodeArray[i][j][k].z -  VectorScaler*nodeArray[i][j][k].vz/2.;
-
+				
 				head[0] = nodeArray[i][j][k].x +  VectorScaler*nodeArray[i][j][k].vx/2.;
 				head[1] = nodeArray[i][j][k].y +  VectorScaler*nodeArray[i][j][k].vy/2.;
 				head[2] = nodeArray[i][j][k].z +  VectorScaler*nodeArray[i][j][k].vz/2.;
-
-
-
-
+				
 				hsv[0] = 240-10*sqrt(SQR(nodeArray[i][j][k].vx) + SQR(nodeArray[i][j][k].vy) + SQR(nodeArray[i][j][k].vz));
 				hsv[1] = 1.;
 				hsv[2] = 1.;
 				HsvRgb( hsv, rgb );
 				nodeArray[i][j][k].rgb[0] = rgb[0]; nodeArray[i][j][k].rgb[1] = rgb[1]; nodeArray[i][j][k].rgb[2] = rgb[2];
-
+				
 				Arrow( tail, head );
 			}
 			tempy -= COORDRANGE / (CUBEROOTOFNODES);
 		}
 		tempz -= COORDRANGE / (CUBEROOTOFNODES); 
 	}
-
-
-
-
-
+	
+	
 	// setup the display mode:
 	// ( *must* be done before call to glutCreateWindow() )
 	// ask for color, double-buffering, and z-buffering:
-
+	
 	glutInitDisplayMode( GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH );
-
-
+	
+	
 	// set the initial window configuration:
-
+	
 	glutInitWindowPosition( 0, 0 );
 	glutInitWindowSize( INIT_WINDOW_SIZE, INIT_WINDOW_SIZE );
-
-
+	
+	
 	// open the window and set its title:
-
+	
 	MainWindow = glutCreateWindow( WINDOWTITLE );
 	glutSetWindowTitle( WINDOWTITLE );
-
-
+	
+	
 	// setup the clear values:
-
+	
 	glClearColor( BACKCOLOR[0], BACKCOLOR[1], BACKCOLOR[2], BACKCOLOR[3] );
-
-
+	
+	
 	// setup the callback routines:
-
-
+	
+	
 	// DisplayFunc -- redraw the window
 	// ReshapeFunc -- handle the user resizing the window
 	// KeyboardFunc -- handle a keyboard input
@@ -1116,7 +1051,7 @@ void
 	// MenuStateFunc -- declare when a pop-up menu is in use
 	// TimerFunc -- trigger something to happen a certain time from now
 	// IdleFunc -- what to do when nothing else is going on
-
+	
 	glutSetWindow( MainWindow );
 	glutDisplayFunc( Display );
 	glutReshapeFunc( Resize );
@@ -1136,26 +1071,26 @@ void
 	glutTabletButtonFunc( NULL );
 	glutMenuStateFunc( NULL );
 	glutTimerFunc( 0, NULL, 0 );
-
+	
 	// DO NOT SET THE GLUT IDLE FUNCTION HERE !!
 	// glutIdleFunc( NULL );
 	// let glui take care of it in InitGlui()
 }
 
 void
-	SBM( int tx, int ty, int tz )
+SBM( int tx, int ty, int tz )
 {
 	fprintf( stderr, "SBM: %5d, %5d, %5d\n", tx, ty, tz );
 }
 
 void
-	SBR( int rx, int ry, int rz )
+SBR( int rx, int ry, int rz )
 {
 	fprintf( stderr, "SBR: %5d, %5d, %5d\n", rx, ry, rz );
 }
 
 void
-	SBB( int button, int state )
+SBB( int button, int state )
 {
 	fprintf( stderr, "SBB: %5d, %5d\n", button, state );
 }
@@ -1163,21 +1098,20 @@ void
 //
 // initialize the display lists that will not change:
 //
-
 void
-	InitLists( void )
+InitLists( void )
 {
-
-
+	
+	
 	// create the axes:
-
+	
 	AxesList = glGenLists( 1 );
 	glNewList( AxesList, GL_COMPILE );
 	glLineWidth( AXES_WIDTH );
 	Axes( 1.5 );
 	glLineWidth( 1. );
 	glEndList();
-
+	
 }
 
 
@@ -1185,53 +1119,52 @@ void
 //
 // the keyboard callback:
 //
-
 void
-	Keyboard( unsigned char c, int x, int y )
+Keyboard( unsigned char c, int x, int y )
 {
 	if( DebugOn != 0 )
 		fprintf( stderr, "Keyboard: '%c' (0x%0x)\n", c, c );
-
+	
 	switch( c )
 	{
-	case 'o':
-	case 'O':
-		WhichProjection = ORTHO;
-		break;
-
-	case 'p':
-	case 'P':
-		WhichProjection = PERSP;
-		break;
-
-	case 'q':
-	case 'Q':
-	case ESCAPE:
-		Buttons( QUIT );	// will not return here
-		break;			// happy compiler
-
-	case 'r':
-	case 'R':
-		LeftButton = ROTATE;
-		break;
-
-	case 's':
-	case 'S':
-		LeftButton = SCALE;
-		break;
-
-	default:
-		fprintf( stderr, "Don't know what to do with keyboard hit: '%c' (0x%0x)\n", c, c );
+		case 'o':
+		case 'O':
+			WhichProjection = ORTHO;
+			break;
+			
+		case 'p':
+		case 'P':
+			WhichProjection = PERSP;
+			break;
+			
+		case 'q':
+		case 'Q':
+		case ESCAPE:
+			Buttons( QUIT );	// will not return here
+			break;			// happy compiler
+			
+		case 'r':
+		case 'R':
+			LeftButton = ROTATE;
+			break;
+			
+		case 's':
+		case 'S':
+			LeftButton = SCALE;
+			break;
+			
+		default:
+			fprintf( stderr, "Don't know what to do with keyboard hit: '%c' (0x%0x)\n", c, c );
 	}
-
-
+	
+	
 	// synchronize the GLUI display with the variables:
-
+	
 	Glui->sync_live();
-
-
+	
+	
 	// force a call to Display():
-
+	
 	glutSetWindow( MainWindow );
 	glutPostRedisplay();
 }
@@ -1241,37 +1174,36 @@ void
 //
 // called when the mouse button transitions down or up:
 //
-
 void
-	MouseButton( int button, int state, int x, int y )
+MouseButton( int button, int state, int x, int y )
 {
 	int b;			// LEFT, MIDDLE, or RIGHT
-
+	
 	if( DebugOn != 0 )
 		fprintf( stderr, "MouseButton: %d, %d, %d, %d\n", button, state, x, y );
-
-
+	
+	
 	// get the proper button bit mask:
-
+	
 	switch( button )
 	{
-	case GLUT_LEFT_BUTTON:
-		b = LEFT;		break;
-
-	case GLUT_MIDDLE_BUTTON:
-		b = MIDDLE;		break;
-
-	case GLUT_RIGHT_BUTTON:
-		b = RIGHT;		break;
-
-	default:
-		b = 0;
-		fprintf( stderr, "Unknown mouse button: %d\n", button );
+		case GLUT_LEFT_BUTTON:
+			b = LEFT;		break;
+			
+		case GLUT_MIDDLE_BUTTON:
+			b = MIDDLE;		break;
+			
+		case GLUT_RIGHT_BUTTON:
+			b = RIGHT;		break;
+			
+		default:
+			b = 0;
+			fprintf( stderr, "Unknown mouse button: %d\n", button );
 	}
-
-
+	
+	
 	// button down sets the bit, up clears the bit:
-
+	
 	if( state == GLUT_DOWN )
 	{
 		Xmouse = x;
@@ -1289,104 +1221,108 @@ void
 //
 // called when the mouse moves while a button is down:
 //
-
 void
-	MouseMotion( int x, int y )
+MouseMotion( int x, int y )
 {
 	int dx, dy;		// change in mouse coordinates
-
+	
 	if( DebugOn != 0 )
 		fprintf( stderr, "MouseMotion: %d, %d\n", x, y );
-
-
+	
+	
 	dx = x - Xmouse;		// change in mouse coords
 	dy = y - Ymouse;
-
+	
 	if( ( ActiveButton & LEFT ) != 0 )
 	{
 		switch( LeftButton )
 		{
-		case ROTATE:
-			Xrot += ( ANGFACT*dy );
-			Yrot += ( ANGFACT*dx );
-			break;
-
-		case SCALE:
-			Scale += SCLFACT * (float) ( dx - dy );
-			if( Scale < MINSCALE )
-				Scale = MINSCALE;
-			break;
+			case ROTATE:
+				Xrot += ( ANGFACT*dy );
+				Yrot += ( ANGFACT*dx );
+				break;
+				
+			case SCALE:
+				Scale += SCLFACT * (float) ( dx - dy );
+				if( Scale < MINSCALE )
+					Scale = MINSCALE;
+				break;
 		}
 	}
-
-
+	
+	
 	if( ( ActiveButton & MIDDLE ) != 0 )
 	{
 		Scale += SCLFACT * (float) ( dx - dy );
-
+		
 		// keep object from turning inside-out or disappearing:
-
+		
 		if( Scale < MINSCALE )
 			Scale = MINSCALE;
 	}
-
+	
 	Xmouse = x;			// new current position
 	Ymouse = y;
-
+	
 	glutSetWindow( MainWindow );
 	glutPostRedisplay();
 }
 
 
-
+/*
+ * Heler Advect function 
+ */
 void
 Advect(float *x, float *y, float *z)
 {
-
-float xa = *x; float ya = *y; float za = *z;
-float vxb, vyb, vzb;
-float vxa, vya, vza, xb, yb, zb, vx, vz, xc, yc, zc, vy;
-
-Vector( xa, ya, za, &vxa, &vya, &vza);
-
-xb = xa + TimeStep*vxa;
-yb = ya + TimeStep*vya;
-zb = za + TimeStep*vza;
-
-Vector( xb, yb, zb, &vxb, &vyb, &vzb);
-
-vx = ( vxa + vxb ) /2.;
-vy = ( vya + vyb ) /2.;
-vz = ( vza + vzb ) /2.;
-
-xc = xa + TimeStep*vx;
-yc = ya + TimeStep*vy;
-zc = za + TimeStep*vz;
-
-*x = xc;
-*y = yc;
-*z = zc;
+	
+	float xa = *x; float ya = *y; float za = *z;
+	float vxb, vyb, vzb;
+	float vxa, vya, vza, xb, yb, zb, vx, vz, xc, yc, zc, vy;
+	
+	Vector( xa, ya, za, &vxa, &vya, &vza);
+	
+	xb = xa + TimeStep*vxa;
+	yb = ya + TimeStep*vya;
+	zb = za + TimeStep*vza;
+	
+	Vector( xb, yb, zb, &vxb, &vyb, &vzb);
+	
+	vx = ( vxa + vxb ) /2.;
+	vy = ( vya + vyb ) /2.;
+	vz = ( vza + vzb ) /2.;
+	
+	xc = xa + TimeStep*vx;
+	yc = ya + TimeStep*vy;
+	zc = za + TimeStep*vz;
+	
+	*x = xc;
+	*y = yc;
+	*z = zc;
 }
 
+/*
+ * Calculates streamslines for display
+ */
 void StreamLine(float x, float y, float z)
 {
-float vx, vy, vz;
-glLineWidth( 2. );
-
-glBegin( GL_LINE_STRIP );
-for(int i = 0; i<300; i++){
-
-if( x < (XMIN) || x > (XMAX)) break;
-if( y < (YMIN) || y > (YMAX)) break;
-if( z < (ZMIN) || z > (ZMAX)) break;
-
-glVertex3f(x, y, z);
-
-Vector(x, y, z, &vx, &vy, &vz);
-if( abs(vx) < 0.01 && abs(vy) < 0.01 && abs(vz) < 0.01) break;
-Advect(&x, &y, &z);
-}
-glEnd();
+	float vx, vy, vz;
+	glLineWidth( 2. );
+	
+	glBegin( GL_LINE_STRIP );
+	for(int i = 0; i<300; i++){
+		
+		if( x < (XMIN) || x > (XMAX)) break;
+		if( y < (YMIN) || y > (YMAX)) break;
+		if( z < (ZMIN) || z > (ZMAX)) break;
+		
+		glVertex3f(x, y, z);
+		
+		Vector(x, y, z, &vx, &vy, &vz);
+		if( abs(vx) < 0.01 && abs(vy) < 0.01 && abs(vz) < 0.01) break;
+		Advect(&x, &y, &z);
+	}
+	glEnd();
 }
 
 
@@ -1397,9 +1333,8 @@ glEnd();
 // this only sets the global variables --
 // the glut main loop is responsible for redrawing the scene
 //
-
 void
-	Reset( void )
+Reset( void )
 {
 	BoundingBox= GLUIFALSE;
 	VectorCloud=GLUITRUE;
@@ -1416,7 +1351,7 @@ void
 	WhichProjection = PERSP;
 	Xrot = Yrot = 0.;
 	TransXYZ[0] = TransXYZ[1] = TransXYZ[2] = 0.;
-
+	
 	RotMatrix[0][1] = RotMatrix[0][2] = RotMatrix[0][3] = 0.;
 	RotMatrix[1][0]                   = RotMatrix[1][2] = RotMatrix[1][3] = 0.;
 	RotMatrix[2][0] = RotMatrix[2][1]                   = RotMatrix[2][3] = 0.;
@@ -1429,16 +1364,15 @@ void
 //
 // called when user resizes the window:
 //
-
 void
-	Resize( int width, int height )
+Resize( int width, int height )
 {
 	if( DebugOn != 0 )
 		fprintf( stderr, "ReSize: %d, %d\n", width, height );
-
+	
 	// don't really need to do anything since window size is
 	// checked each time in Display():
-
+	
 	glutSetWindow( MainWindow );
 	glutPostRedisplay();
 }
@@ -1447,21 +1381,18 @@ void
 //
 // handle a change to the window's visibility:
 //
-
 void
-	Visibility ( int state )
+Visibility ( int state )
 {
 	if( DebugOn != 0 )
 		fprintf( stderr, "Visibility: %d\n", state );
-
+	
 	if( state == GLUT_VISIBLE )
 	{
 		glutSetWindow( MainWindow );
 		glutPostRedisplay();
 	}
 }
-
-
 
 
 //////////////////////////////////////////  EXTRA HANDY UTILITIES:  /////////////////////////////
@@ -1493,17 +1424,17 @@ void Arrow( float tail[3], float head[3] )
 	float mag;			// magnitude of major direction
 	float f;			// fabs of magnitude
 	int axis;			// which axis is the major
-
-
+	
+	
 	// set w direction in u-v-w coordinate system:
-
+	
 	w[0] = head[0] - tail[0];
 	w[1] = head[1] - tail[1];
 	w[2] = head[2] - tail[2];
-
-
+	
+	
 	// determine major direction:
-
+	
 	axis = X;
 	mag = fabs( w[0] );
 	if( (f=fabs(w[1]))  > mag )
@@ -1516,22 +1447,22 @@ void Arrow( float tail[3], float head[3] )
 		axis = Z;
 		mag = f;
 	}
-
-
+	
+	
 	// set size of wings and turn w into a Unit vector:
-
+	
 	d = WINGS * Unit( w, w );
-
-
+	
+	
 	// draw the shaft of the arrow:
-
+	
 	glBegin( GL_LINE_STRIP );
 	glVertex3fv( tail );
 	glVertex3fv( head );
 	glEnd();
-
+	
 	// draw two sets of wings in the non-major directions:
-
+	
 	if( axis != X )
 	{
 		Cross( w, axx, v );
@@ -1552,8 +1483,8 @@ void Arrow( float tail[3], float head[3] )
 		glVertex3f( x, y, z );
 		glEnd();
 	}
-
-
+	
+	
 	if( axis != Y )
 	{
 		Cross( w, ayy, v );
@@ -1574,9 +1505,9 @@ void Arrow( float tail[3], float head[3] )
 		glVertex3f( x, y, z );
 		glEnd();
 	}
-
-
-
+	
+	
+	
 	if( axis != Z )
 	{
 		Cross( w, azz, v );
@@ -1602,7 +1533,7 @@ void Arrow( float tail[3], float head[3] )
 
 
 float
-	Dot( float v1[3], float v2[3] )
+Dot( float v1[3], float v2[3] )
 {
 	return v1[0]*v2[0] + v1[1]*v2[1] + v1[2]*v2[2];
 }
@@ -1610,14 +1541,14 @@ float
 
 
 void
-	Cross( float v1[3], float v2[3], float vout[3] )
+Cross( float v1[3], float v2[3], float vout[3] )
 {
 	float tmp[3];
-
+	
 	tmp[0] = v1[1]*v2[2] - v2[1]*v1[2];
 	tmp[1] = v2[0]*v1[2] - v1[0]*v2[2];
 	tmp[2] = v1[0]*v2[1] - v2[0]*v1[1];
-
+	
 	vout[0] = tmp[0];
 	vout[1] = tmp[1];
 	vout[2] = tmp[2];
@@ -1626,12 +1557,12 @@ void
 
 
 float
-	Unit( float vin[3], float vout[3] )
+Unit( float vin[3], float vout[3] )
 {
 	float dist, f ;
-
+	
 	dist = vin[0]*vin[0] + vin[1]*vin[1] + vin[2]*vin[2];
-
+	
 	if( dist > 0.0 )
 	{
 		dist = sqrt( dist );
@@ -1646,7 +1577,7 @@ float
 		vout[1] = vin[1];
 		vout[2] = vin[2];
 	}
-
+	
 	return dist;
 }
 
@@ -1711,13 +1642,13 @@ const float BASEFRAC = 1.10f;
 //
 
 void
-	Axes( float length )
+Axes( float length )
 {
 	int i, j;			// counters
 	float fact;			// character scale factor
 	float base;			// character start location
-
-
+	
+	
 	glBegin( GL_LINE_STRIP );
 	glVertex3f( length, 0., 0. );
 	glVertex3f( 0., 0., 0. );
@@ -1727,17 +1658,17 @@ void
 	glVertex3f( 0., 0., 0. );
 	glVertex3f( 0., 0., length );
 	glEnd();
-
+	
 	fact = LENFRAC * length;
 	base = BASEFRAC * length;
-
+	
 	glBegin( GL_LINE_STRIP );
 	for( i = 0; i < 4; i++ )
 	{
 		j = xorder[i];
 		if( j < 0 )
 		{
-
+			
 			glEnd();
 			glBegin( GL_LINE_STRIP );
 			j = -j;
@@ -1746,14 +1677,14 @@ void
 		glVertex3f( base + fact*xx[j], fact*xy[j], 0.0 );
 	}
 	glEnd();
-
+	
 	glBegin( GL_LINE_STRIP );
 	for( i = 0; i < 5; i++ )
 	{
 		j = yorder[i];
 		if( j < 0 )
 		{
-
+			
 			glEnd();
 			glBegin( GL_LINE_STRIP );
 			j = -j;
@@ -1762,14 +1693,14 @@ void
 		glVertex3f( fact*yx[j], base + fact*yy[j], 0.0 );
 	}
 	glEnd();
-
+	
 	glBegin( GL_LINE_STRIP );
 	for( i = 0; i < 6; i++ )
 	{
 		j = zorder[i];
 		if( j < 0 )
 		{
-
+			
 			glEnd();
 			glBegin( GL_LINE_STRIP );
 			j = -j;
@@ -1778,7 +1709,7 @@ void
 		glVertex3f( 0.0, fact*zy[j], base + fact*zx[j] );
 	}
 	glEnd();
-
+	
 }
 
 
@@ -1793,77 +1724,77 @@ void
 
 
 void
-	HsvRgb( float hsv[3], float rgb[3] )
+HsvRgb( float hsv[3], float rgb[3] )
 {
 	float h, s, v;			// hue, sat, value
 	float r, g, b;			// red, green, blue
 	float i, f, p, q, t;		// interim values
-
-
+	
+	
 	// guarantee valid input:
-
+	
 	h = hsv[0] / 60.;
 	while( h >= 6. )	h -= 6.;
 	while( h <  0. ) 	h += 6.;
-
+	
 	s = hsv[1];
 	if( s < 0. )
 		s = 0.;
 	if( s > 1. )
 		s = 1.;
-
+	
 	v = hsv[2];
 	if( v < 0. )
 		v = 0.;
 	if( v > 1. )
 		v = 1.;
-
-
+	
+	
 	// if sat==0, then is a gray:
-
+	
 	if( s == 0.0 )
 	{
 		rgb[0] = rgb[1] = rgb[2] = v;
 		return;
 	}
-
-
+	
+	
 	// get an rgb from the hue itself:
-
+	
 	i = floor( h );
 	f = h - i;
 	p = v * ( 1. - s );
 	q = v * ( 1. - s*f );
 	t = v * ( 1. - ( s * (1.-f) ) );
-
+	
 	switch( (int) i )
 	{
-	case 0:
-		r = v;	g = t;	b = p;
-		break;
-
-	case 1:
-		r = q;	g = v;	b = p;
-		break;
-
-	case 2:
-		r = p;	g = v;	b = t;
-		break;
-
-	case 3:
-		r = p;	g = q;	b = v;
-		break;
-
-	case 4:
-		r = t;	g = p;	b = v;
-		break;
-
-	case 5:
-		r = v;	g = p;	b = q;
-		break;
+		case 0:
+			r = v;	g = t;	b = p;
+			break;
+			
+		case 1:
+			r = q;	g = v;	b = p;
+			break;
+			
+		case 2:
+			r = p;	g = v;	b = t;
+			break;
+			
+		case 3:
+			r = p;	g = q;	b = v;
+			break;
+			
+		case 4:
+			r = t;	g = p;	b = v;
+			break;
+			
+		case 5:
+			r = v;	g = p;	b = q;
+			break;
 	}
-
-
+	
+	
 	rgb[0] = r;
 	rgb[1] = g;
 	rgb[2] = b;
