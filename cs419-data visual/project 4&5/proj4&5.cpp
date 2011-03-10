@@ -33,33 +33,6 @@
 #include "glui.h"
 
 
-
-/*
-Put this project number and your name in the title bar. 
-
-The information on the temperature distribution is the same as in Project #2. 
-
-Display the temperature data as a point cloud. 
-
-Use four GLUI range sliders to allow the user to cull the data by displaying a subset in X, Y, Z, and Temperature. 
-
-Use a fifth GLUI range slider to allow the user to reduce the data by checking its distance from the center of the cube (0.,0.,0.). 
-
-Use a sixth range slider to control the display based on the absolute gradient at each point. The gradient at each point is a 3-component vector: (dT/dx,dT/dy,dT/dz). The absolute gradient is: sqrt( SQR(dTdx) + SQR(dTdy) + SQR(dTdz) ). 
-This will show where the temperature is changing quickly and where it is changing slowly.
-*/
-
-
-//
-// constants:
-//
-// NOTE: There are a bunch of good reasons to use const variables instead
-// of #define's.  However, Visual C++ does not allow a const variable
-// to be used as an array size or as the case in a switch() statement.  So in
-// the following, all constants are const variables except those which need to
-// be array sizes or cases in switch() statements.  Those are #defines.
-//
-//
 inline float SQR( float x )
 {
 	return x * x;

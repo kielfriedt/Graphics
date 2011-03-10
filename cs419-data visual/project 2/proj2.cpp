@@ -291,11 +291,10 @@ struct centers
 //
 // main program:
 //
-
 int
 main( int argc, char *argv[] )
 {
-
+	
 	// turn on the glut package:
 	// (do this before checking argc and argv since it might
 	// pull some command line arguments out)
@@ -346,6 +345,9 @@ main( int argc, char *argv[] )
 	return 0;
 }
 
+/*
+ * Sets tempature locations of the cube
+ */
 float Temperature( float x, float y, float z )
 {
 	float t = 0.0;
@@ -374,14 +376,11 @@ float Temperature( float x, float y, float z )
 //
 // do not call Display() from here -- let glutMainLoop() do it
 //
-
 void
 Animate( void )
 {
 	// put animation stuff in here -- change some global variables
 	// for Display() to find:
-	
-	
 	
 	// force a call to Display() next time it is convenient:
 	
@@ -389,13 +388,9 @@ Animate( void )
 	glutPostRedisplay();
 }
 
-
-
-
 //
 // glui buttons callback:
 //
-
 void
 Buttons( int id )
 {
@@ -428,11 +423,9 @@ Buttons( int id )
 }
 
 
-
 //
 // draw the complete scene:
 //
-
 void
 Display( void )
 {
@@ -445,11 +438,9 @@ Display( void )
 		fprintf( stderr, "Display\n" );
 	}
 	
-	
 	// set which window we want to do the graphics into:
 	
 	glutSetWindow( MainWindow );
-	
 	
 	// erase the background:
 	
@@ -457,11 +448,9 @@ Display( void )
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	glEnable( GL_DEPTH_TEST );
 	
-	
 	// specify shading to be flat:
 	
 	glShadeModel( GL_FLAT );
-	
 	
 	// set the viewport to a square centered in the window:
 	
@@ -471,7 +460,6 @@ Display( void )
 	xl = ( vx - v ) / 2;
 	yb = ( vy - v ) / 2;
 	glViewport( xl, yb,  v, v );
-	
 	
 	// set the viewing volume:
 	// remember that the Z clipping  values are actually
@@ -491,12 +479,10 @@ Display( void )
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity();
 	
-	
 	// set the eye position, look-at position, and up-vector:
 	// IF DOING 2D, REMOVE THIS -- OTHERWISE ALL YOUR 2D WILL DISAPPEAR !
 	
 	gluLookAt( 0., 0., 3.,     0., 0., 0.,     0., 1., 0. );
-	
 	
 	// translate the objects in the scene:
 	// note the minus sign on the z value
@@ -561,8 +547,6 @@ Display( void )
 	glCallList( PointList );
 	
 	
-	
-	
 	// swap the double-buffered framebuffers:
 	
 	glutSwapBuffers();
@@ -574,12 +558,9 @@ Display( void )
 	glFlush();
 }
 
-
-
 //
 // use glut to display a string of characters using a raster font:
 //
-
 void
 DoRasterString( float x, float y, float z, char *s )
 {
@@ -592,12 +573,9 @@ DoRasterString( float x, float y, float z, char *s )
 	}
 }
 
-
-
 //
 // use glut to display a string of characters using a stroke font:
 //
-
 void
 DoStrokeString( float x, float y, float z, float ht, char *s )
 {
@@ -616,11 +594,9 @@ DoStrokeString( float x, float y, float z, float ht, char *s )
 }
 
 
-
 //
 // return the number of seconds since the start of the program:
 //
-
 float
 ElapsedSeconds( void )
 {
@@ -633,11 +609,9 @@ ElapsedSeconds( void )
 	return (float)ms / 1000.;
 }
 
-
 //
 // initialize the glui window:
 //
-
 void
 InitGlui( void )
 {
@@ -719,7 +693,6 @@ InitGlui( void )
 // initialize the glut and OpenGL libraries:
 //	also setup display lists and callback functions
 //
-
 void
 InitGraphics( void )
 {
@@ -834,7 +807,6 @@ SBB( int button, int state )
 //
 // initialize the display lists that will not change:
 //
-
 void
 InitLists( void )
 {
@@ -871,7 +843,6 @@ InitLists( void )
 //
 // the keyboard callback:
 //
-
 void
 Keyboard( unsigned char c, int x, int y )
 {
@@ -922,12 +893,9 @@ Keyboard( unsigned char c, int x, int y )
 	glutPostRedisplay();
 }
 
-
-
 //
 // called when the mouse button transitions down or up:
 //
-
 void
 MouseButton( int button, int state, int x, int y )
 {
@@ -971,11 +939,9 @@ MouseButton( int button, int state, int x, int y )
 }
 
 
-
 //
 // called when the mouse moves while a button is down:
 //
-
 void
 MouseMotion( int x, int y )
 {
@@ -1022,8 +988,6 @@ MouseMotion( int x, int y )
 	glutSetWindow( MainWindow );
 	glutPostRedisplay();
 }
-
-
 
 //
 // reset the transformations and the colors:

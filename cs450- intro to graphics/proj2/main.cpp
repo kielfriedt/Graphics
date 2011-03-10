@@ -19,7 +19,6 @@
 #include <iostream>
 // Header Files
 #include <stdio.h>
-/* glut.h includes gl.h and glu.h*/
 #include <OpenGL/gl.h>		// Header File For The OpenGL32 Library
 #include <OpenGL/glu.h>		// Header File For The GLu32 Library
 #include <GLUT/glut.h>		// Header File For The GLut Library
@@ -83,9 +82,18 @@ float asp = 1;
 int f1 = 0, v1 = 0, vn1 = 0;
 float vl = -5.0, vr = 5.0, vb = -5.0, vt = 5.0;
 
+//Prototypes
 void drawobj(GLenum mode);
 void processHits(GLint hits, GLuint buffer[]);
 
+
+/*
+ * Callback functions
+ */
+
+/*
+ * Projection selection either ortho or perspective
+ */
 void projCB(int id)
 {
 	glMatrixMode( GL_PROJECTION );
@@ -106,6 +114,10 @@ void textCB(int id)
 	glutPostRedisplay();
 }
 
+/*
+ * User types in obj file and loads attribute from the file to the object.
+ * Parses the file and reads in Vertex, Vertex normals and faces
+ */
 void buttonCB(int control)
 {
 	struct  Obj * obj;
@@ -114,21 +126,8 @@ void buttonCB(int control)
 	char buff[100];
 	char buf[10];
 	filename = objFileNameTextField->get_text();
-	/*
-	 while(current != NULL) // Make sure we havn't loaded this file already
-	 {
-	 if(strcmp(objFileNameTextField->get_text(), current->name)==0)
-	 {
-	 cout << "You already loaded this file." << endl;
-	 return;
-	 }
-	 current = current->next;
-	 }*/
-	
 	obj = (struct Obj*)malloc(sizeof(struct Obj));
 	obj->select = 0;
-	//obj->name = new char[strlen(objFileNameTextField->get_text()) + 1];
-	//strcpy(obj->name, objFileNameTextField->get_text());
 	obj->id = ind++;
 	obj->v1 =0;
 	obj->vn1 =0;
@@ -190,10 +189,12 @@ void buttonCB(int control)
 			current = current->next;
 		current ->next = obj;
 	}
-	//glui->sync_live();
 	glutPostRedisplay();
 }
 
+/*
+ * Color Callback
+ */
 void colorCB(int id)
 {
 	struct Obj * current = head;
@@ -210,6 +211,7 @@ void colorCB(int id)
 	glutPostRedisplay();
 }
 
+
 void myGlutDisplay(void)
 {
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -219,6 +221,9 @@ void myGlutDisplay(void)
 	glFlush();	
 }
 
+/*
+ * Draw the current object wiht opengl calls, maybe in wire frame.
+ */
 void drawobj(GLenum mode)
 {
 	struct  Obj * current=head;
@@ -275,7 +280,6 @@ void myGlutReshape(int w, int h)
 	// Now lets' make the view volume ar match that of the viewport
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	//if(projType == ORTHO) {
 	if (w <= h) {
 		vb = vl * (GLfloat)h/ (GLfloat)w;
 		vt = vr * (GLfloat) h/ (GLfloat)w;
@@ -285,7 +289,6 @@ void myGlutReshape(int w, int h)
 		vr = vt * (GLfloat) w/ (GLfloat)h;
 		glOrtho(vl,vr,vb,vt, NEAR, FAR);
 	}
-	//}
 	asp = h/w;
 	glMatrixMode(GL_MODELVIEW);
 }
@@ -332,6 +335,10 @@ void myGlutMouse (int button, int state, int x, int y)
 	
 }
 
+/*
+ * Calculates the mouse clicks on the object and reports which objects were touched 
+ * based on depth.
+ */
 void processHits(GLint hits, GLuint buffer[])
 {
 	struct Obj * current = head;
@@ -377,6 +384,9 @@ void processHits(GLint hits, GLuint buffer[])
 	}
 }
 
+/*
+ * Sets up scene with intial values
+ */
 void initScene()
 {
 	float light0_pos[] = {0.0, 3.0, 0.0, 1.0}; 
@@ -398,14 +408,13 @@ void initScene()
 	glLoadIdentity();
 	glOrtho(-5, 5, -5, 5, 0, 10);   //l,r, b, t, near, far
 	glMatrixMode(GL_MODELVIEW);
-	//gluPerspective (90., 1., 0.1, 4.);
-	//gluLookAt (0., 0., 2., 0., 0., 0., 0., 1., 0.);
-	//gluPerspective (50., 1., 0.1, 0.5);
-	//gluLookAt (0., 0., 0.3, 0., 0.1, 0., 0., 1., 0.);
 	glutPostRedisplay();
 	glFlush();
 }
 
+/*
+ * Sets up the opengl loop and calls the main loop
+ */
 int main(int argc, char **argv)
 {
 	// setup glut
@@ -420,7 +429,7 @@ int main(int argc, char **argv)
 	glutMouseFunc( myGlutMouse );
 	// Initialize my Scene
 	initScene();
-	//Build the GU
+	//Build the GUI
 	glui = GLUI_Master.create_glui( "OBJ Options", 0, 600, 50 ); /* name, flags, x, and y */
 	GLUI_Panel *objPanel = glui->add_panel("Obj Files");
 	objFileNameTextField = glui->add_edittext_to_panel(objPanel, "Filename:",GLUI_EDITTEXT_TEXT,0,OBJ_TEXTFIELD,textCB);

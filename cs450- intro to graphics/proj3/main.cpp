@@ -142,9 +142,12 @@ void drawaxis(GLenum mode,float x, float y, float z);
 /************************************************************************/
 /*                       FUNCTION DEFINITIONS                           */
 /************************************************************************/
-/// Reads the contents of the obj file and appends the data at the end of 
-/// the vector of Objects. This time we allow the same object to be loaded
-/// several times.
+
+/*
+ * Reads the contents of the obj file and appends the data at the end of 
+ * the vector of Objects. This time we allow the same object to be loaded
+ * several times.
+ */
 int loadObj (char *fileName, Object &obj){
 	ifstream file;
 	file.open (fileName);
@@ -273,6 +276,13 @@ int loadObj (char *fileName, Object &obj){
 	return EXIT_SUCCESS;
 }
 
+/*
+ * Callback functions
+ */
+
+/*
+ * Sets up Callbacks for translation, rotatin and scale of the object
+ */
 void transCB(int id){
 	switch(transType)
 	{
@@ -297,6 +307,9 @@ void projCB(int id){
 	glutPostRedisplay ();
 }
 
+/*
+ * Matrix to vector
+ */
 void matrixtovector(float matrix[16],float vectorp[3], float vectorw[3] ){
 	for (int x = 0; x < 12; x+=4) 
 		vectorw[x/4] = matrix[x]*vectorp[0] + matrix[x+1]*vectorp[1] + matrix[x+2]*vectorp[2] + matrix[x+3]*1;
@@ -308,6 +321,9 @@ void fovCB(int id){
 	glui->sync_live ();
 }
 
+/*
+ * Callback for camera rotation
+ */
 void camRotationCB(int id){
 	float light0_pos[]	=	{0.f, 3.f, 2.f, 0.f}; 
 	float diffuse0[]	=	{1.f, 1.f, 1.f, .5f}; 
@@ -320,6 +336,9 @@ void camRotationCB(int id){
 	glutPostRedisplay();
 }
 
+/*
+ * Callback for camera z direction
+ */
 void dollyCB(int id) {
 	
 	float changez = camDolly-gCamOld;
@@ -343,6 +362,9 @@ void dollyCB(int id) {
 	glutPostRedisplay();
 }
 
+/*
+ * Callback for traking camera via x and y
+ */
 void trackXYCB(int id) {
 	
 	float changex = camTrack[0]-gCamTrackold[0];
@@ -374,6 +396,9 @@ void textCB(int id){
 	glutPostRedisplay ();
 }
 
+/*
+ * User enters in object and loads attributes from the object file to the object
+ */
 void buttonCB(int control){
 	Objects.push_back(Object());
 	printf("Loading %s\n", objFileNameTextField->get_text());
@@ -382,6 +407,9 @@ void buttonCB(int control){
 	glutPostRedisplay ();
 }
 
+/*
+ * Color Callback 
+ */
 void colorCB(int id){
 	glui->sync_live ();
 	if (objSelected != -1)
@@ -394,6 +422,9 @@ void colorCB(int id){
 	glutPostRedisplay ();
 }
 
+/*
+ * Draws x,y and z axis 
+ */
 void drawaxis(){
 	
 	glBegin(GL_LINES);
@@ -413,23 +444,17 @@ void drawaxis(){
 	
 }
 
-//x cone = -2
-//y cone = -3
-//z cone = -4
+/*
+ * Draws cones at the ends of the axis of the objects
+ * x cone = -2, y cone = -3, z cone = -4
+ */
 void drawaxis(GLenum mode,float x, float y, float z){
-	//GLUquadricObj *xHandle = gluNewQuadric();
-	//GLUquadricObj *yHandle = gluNewQuadric();
-	//GLUquadricObj *zHandle = gluNewQuadric();
-	
-	
 	
 	//Translate the OBJ Cord model
 	glPushMatrix();
 	
 	glTranslated(Objects.at(currentobj).translate_matrix[0], Objects.at(currentobj).translate_matrix[1], Objects.at(currentobj).translate_matrix[2]);
-	//glMultMatrixf(Objects.at(i).objRotMat);
 	//Use glutSolidCone to draw the cone
-	
 	
 	//xCone
 	glPushMatrix();
@@ -488,71 +513,12 @@ void drawaxis(GLenum mode,float x, float y, float z){
 	glEnable (GL_LIGHTING);
 	glPopMatrix();
 	
-	
-	/*
-	 // draw line for x axis ofobject
-	 
-	 glPushMatrix();
-	 glScaled(1, 1, Objects.at(currentobj).scale_matrix[0]);
-	 if(mode == GL_SELECT)
-	 glLoadName(-2);
-	 glColor3f(1.0, 0.0, 0.0);
-	 glBegin(GL_LINES);
-	 glVertex3f(x, 0.0, 0.0);
-	 glVertex3f(x+.6, 0.0, 0.0);
-	 glEnd();
-	 
-	 glPushMatrix();
-	 
-	 glColor3f(1.0, 0.0, 0.0);
-	 glTranslatef(x+.6, 0, 0);
-	 glRotated(90, 0, 1, 0);
-	 glRotated(0, 1, 0, 0);
-	 gluSphere(xHandle, .05, 64, 64);
-	 glPopMatrix();
-	 glPopMatrix();
-	 
-	 glPushMatrix();
-	 // draw line for y axis object
-	 glScaled(1, 1, Objects.at(currentobj).scale_matrix[1]);
-	 if(mode == GL_SELECT)
-	 glLoadName(-3);
-	 glColor3f(0.0, 1.0, 0.0);
-	 glBegin(GL_LINES);
-	 glVertex3f(0.0, y, 0.0);
-	 glVertex3f(0.0, y+.6, 0.0);
-	 glEnd();
-	 
-	 glPushMatrix();
-	 glColor3f(0.0, 1.0, 0.0);
-	 glTranslatef(0, y+.6, 0);
-	 glRotated(270, 1, 0, 0);
-	 gluSphere(yHandle, .05, 64, 64);
-	 glPopMatrix();
-	 glPopMatrix();
-	 
-	 glPushMatrix();
-	 
-	 // draw line for Z axis object
-	 glScaled(1, 1, Objects.at(currentobj).scale_matrix[2]);
-	 if(mode == GL_SELECT)
-	 glLoadName(-4);
-	 glColor3f(0.0, 0.0, 1.0);
-	 glBegin(GL_LINES);
-	 glVertex3f(0.0, 0.0,z);
-	 glVertex3f(0.0, 0.0, z+.6);
-	 glEnd();
-	 
-	 glPushMatrix();
-	 glColor3f(0.0, 0.0, 1.0);
-	 glTranslatef(0, 0, z+.6);
-	 gluSphere(zHandle, .05, 64, 64);
-	 glPopMatrix();
-	 glPopMatrix();
-	 */
 	glutPostRedisplay ();
 }
 
+/*
+ * Draws the objects with current gl calls with opengl methods
+ */
 void drawObjects(GLenum mode)
 {
 	glMatrixMode(GL_MODELVIEW);
@@ -622,6 +588,9 @@ void drawObjects(GLenum mode)
 	glEnd();
 }
 
+/*
+ * perspective projection
+ */
 void setupVV(){
 	glMatrixMode (GL_PROJECTION);
 	glLoadIdentity ();
@@ -637,6 +606,9 @@ void setupVV(){
 	}
 }
 
+/*
+ * calls draw objects
+ */
 void myGlutDisplay(void){
 	glClear( GL_COLOR_BUFFER_BIT  | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
@@ -647,6 +619,10 @@ void myGlutDisplay(void){
 	glutSwapBuffers();
 }
 
+//-------------------------------------------------------------------------
+//  This function is passed to the glutReshapeFunc and is called 
+//  whenever the window is resized.
+//-------------------------------------------------------------------------
 void myGlutReshape(int x, int y){
 	sizeX = x;
 	sizeY = y;
@@ -667,6 +643,11 @@ void myGlutReshape(int x, int y){
 	glutPostRedisplay ();
 }
 
+
+//-------------------------------------------------------------------------
+//  This function is passed to the glutMouseFunc and is called 
+//  whenever the mouse is clicked.
+//-------------------------------------------------------------------------
 void myGlutMouse (int button, int button_state, int x, int y){
 	GLuint selectBuffer[512];
 	GLint viewport[4];
@@ -708,21 +689,22 @@ void myGlutMouse (int button, int button_state, int x, int y){
 	glutPostRedisplay();
 }
 
+/*
+ * Calculates the mouse clicks on the object and reports which objects were touched 
+ * based on depth.
+ */
 void processHits(GLint hits, GLuint buffer[]){
 	int pick = -1;
 	unsigned int min_depth = 4294967295;
 	GLuint *ptr = (GLuint *) buffer;
-	//cout << "Number of hits = " << hits << endl;
 	for(int i = 0 ; i < hits ; i++, ptr+=4)
 	{
 		if (*(ptr+1) < min_depth)
 		{
 			min_depth = *(ptr+1);
 			pick = *(ptr+3);
-			//	cout << pick << endl;
 		}
 	}
-	
 	
 	if(pick < -1)
 		currentm=pick;
@@ -732,7 +714,6 @@ void processHits(GLint hits, GLuint buffer[]){
 	}
 	if (pick > -1)
 	{
-		//cout << "We got ourselves a winner: #" << pick << endl;
 		red = Objects.at(pick).color.r;
 		green = Objects.at(pick).color.g;
 		blue = Objects.at(pick).color.b;
@@ -746,22 +727,19 @@ void processHits(GLint hits, GLuint buffer[]){
 	glui->sync_live();
 }
 
+/*
+ * Translates, Rotates and Scales object with mouse coordinates
+ */
 void mousecord( int x, int y)
-{
-	//cout<< x<<" "<< y<< endl;
-	
-	
+{	
 	float changex = (x-oldmousecord[0])/30;
 	float changey = (oldmousecord[1]-y)/30;
-	
-	//cout << changex<<" changex "<<changey<<" changey\n";
-	
+
 	if((changex > 2||changex < -2)||( changey>  2||changey< -2)){
 		changex = 0;
 		changey = 0;
 	}
 	rotdif += changex;
-	//cout << changex<<" changex "<<changey<<" changey\n";
 	
 	switch (selected) {
 		case 1: //translate
@@ -848,6 +826,9 @@ void mousecord( int x, int y)
 	glutPostRedisplay();
 }
 
+/*
+ * Sets up scene with intial values
+ */
 void initScene(){
 	float light0_pos[]	=	{0.f, 3.f, 2.f, 0.f}; 
 	float diffuse0[]	=	{1.f, 1.f, 1.f, .5f}; 
@@ -862,10 +843,12 @@ void initScene(){
 	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient0); 
 	glLightfv(GL_LIGHT0, GL_SPECULAR, specular0); 
 	glEnable (GL_DEPTH_TEST);
-	//glLineWidth(1);
 	setupVV();
 }
 
+/*
+ * Sets up the opengl loop and calls the main loop
+ */
 int main(int argc, char **argv){
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);  

@@ -193,6 +193,11 @@ const string ext = string(".obj");
 /*                       FUNCTION DEFINITIONS                           */
 /************************************************************************/
 
+/*
+ * Reads the contents of the obj file and appends the data at the end of 
+ * the vector of Objects. This time we allow the same object to be loaded
+ * several times.
+ */
 int loadObj (const char *fileName, Object &obj)
 {
 	obj.texProvided = false;
@@ -363,8 +368,6 @@ int loadObj (const char *fileName, Object &obj)
 		glDisable (GL_TEXTURE_GEN_T);
 	}
 	
-	
-	/// Now we generate the display list.
 	obj.displayList = glGenLists(1);
 	glMatrixMode (GL_MODELVIEW);
 	glLoadIdentity ();
@@ -407,6 +410,13 @@ int loadObj (const char *fileName, Object &obj)
 	return EXIT_SUCCESS;
 }
 
+/*
+ * Callback functions
+ */
+
+/*
+ * Callback for ortho or perspective
+ */
 void projCB(int id)
 {
 	switch(id)
@@ -423,17 +433,23 @@ void projCB(int id)
 	}
 	
 	setupVV();
-	
 	glui->sync_live ();
 	glutPostRedisplay ();
 }
 
+/*
+ * Simple texture callback
+ */
 void textureCB (int id)
 {
 	glui->sync_live ();
 	glutPostRedisplay ();
 }
 
+/*
+ * Texture setup: Binds and allows user multiple opengl methods, REPEAT, CLAMP, NEAREST, 
+ * LINEAR, REPLACE, MODULATE, DECAL, BLEND
+ */
 void handleTexture(int obj)
 {
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -520,6 +536,9 @@ void handleTexture(int obj)
 	glBindTexture(GL_TEXTURE_2D, textureNames); 
 }
 
+/*
+ * Callback for shaders including pass through, flat, smooth, diffuse, phong or toon
+ */
 void shadingCB (int id)
 {
 	if(shadingModel == FLAT)
@@ -556,6 +575,9 @@ void textCB(int id)
 	glutPostRedisplay ();
 }
 
+/*
+ * Callback either loads object file attributes or takes a screenshot
+ */
 void buttonCB(int control)
 {
 	string filename = string(objFileNameTextField->get_text()) + ext;
@@ -575,6 +597,9 @@ void buttonCB(int control)
 	glutPostRedisplay ();
 }
 
+/*
+ * Callback sets up ambient, diffuse or specular color displays
+ */
 void colorCB(int id)
 {
 	for (int i = 0 ; i < (int) Objects.size() ; i++)
@@ -601,6 +626,9 @@ void colorCB(int id)
 	glutPostRedisplay ();
 }
 
+/*
+ * Draws the objects with current gl calls with opengl methods
+ */
 void drawObjects(GLenum mode)
 {
 	glColorMaterial(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE);
@@ -650,6 +678,9 @@ void drawObjects(GLenum mode)
 	}
 }
 
+/*
+ * perspective projection
+ */
 void setupVV ()
 {
 	glMatrixMode (GL_PROJECTION);
@@ -708,6 +739,10 @@ void myGlutDisplay(void)
 	glFlush();
 }
 
+//-------------------------------------------------------------------------
+//  This function is passed to the glutReshapeFunc and is called 
+//  whenever the window is resized.
+//-------------------------------------------------------------------------
 void myGlutReshape(int x, int y)
 {
 	sizeX = x;
@@ -730,6 +765,10 @@ void myGlutReshape(int x, int y)
 	glutPostRedisplay ();
 }
 
+//-------------------------------------------------------------------------
+//  This function is passed to the glutMouseFunc and is called 
+//  whenever the mouse is clicked.
+//-------------------------------------------------------------------------
 void myGlutMouse (int button, int button_state, int x, int y)
 {
 	GLuint selectBuffer[512];
@@ -765,6 +804,10 @@ void myGlutMouse (int button, int button_state, int x, int y)
 	glutPostRedisplay();
 }
 
+/*
+ * Calculates the mouse clicks on the object and reports which objects were touched 
+ * based on depth.
+ */
 void processHits(GLint hits, GLuint buffer[])
 {
 	int pick = -1;
@@ -803,6 +846,9 @@ void processHits(GLint hits, GLuint buffer[])
 	glui->sync_live ();
 }
 
+/*
+ * Sets up scene with intial values
+ */
 void initScene()
 {
 	float light0_pos[] = {0.f, 3.f, 2.f, 0};
@@ -834,6 +880,9 @@ void initScene()
 	
 }
 
+/*
+ * Sets up the opengl loop and calls the main loop
+ */
 int main(int argc, char **argv)
 {
 	glutInit(&argc, argv);
